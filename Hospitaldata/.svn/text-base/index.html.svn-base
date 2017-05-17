@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  	<meta charset="UTF-8">
+  	<title>后台医院统计</title>
+  	<script type="text/javascript" src="default/Tpl/public/js/jquery-1.8.3.min.js"></script>
+  	<style type="text/css">
+  		table{width: 1350px;}
+		td{text-align: center;}
+	</style>
+ </head>
+ <body>
+ <body>
+ 	<h3 align="center">后台医院数据统计</h3>
+	<table border="1" cellpadding="5%" cellspacing="0" align="center">
+		<tr>
+			<td colspan="12">
+				<input type="text" id="startdate" value="{$startdate}" placeholder="起止时间" >
+ 				<input type="text" id="enddate" value="{$enddate}" placeholder="结束时间" >
+ 				<input type="text" id="hospitalname" value="{$hospitalname}" placeholder="医院名称" >
+    			<input type="button" onclick="searchword()" value="搜索">
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size:18px;font-weight:bold;">医院名称</td>
+			<td style="font-size:18px;font-weight:bold;">医院注册码</td>
+			<td style="font-size:18px;font-weight:bold;">院长姓名</td>
+			<td style="font-size:18px;font-weight:bold;">院长电话</td>
+			<td style="font-size:18px;font-weight:bold;">总服务数(项)</td>
+			<td style="font-size:18px;font-weight:bold;">总消费金额(元)</td>
+			<td style="font-size:18px;font-weight:bold;">今日服务(项)</td>
+			<td style="font-size:18px;font-weight:bold;">今日消费金额(元)</td>
+			<td style="font-size:18px;font-weight:bold;">总用户量(人)</td>
+			<td style="font-size:18px;font-weight:bold;">今日新增用户(人)</td>
+			<td style="font-size:18px;font-weight:bold;">安装时间</td>
+			<td style="font-size:18px;font-weight:bold;">最后登录时间</td>
+		</tr>
+		<volist name="list" id="q">
+			<tr>
+				<td>
+					<a href="index.php?m=Hospitaldata&a=hospitalindex&Hospital_RegisterCode={$q.code}">
+						{$q.hospitalname}
+					</a>
+				</td>
+				<td>{$q.code}</td>
+				<td>{$q.Owner}</td>
+				<td>{$q.OwnerPhone}</td>
+				<td>{$q.countservice}</td>
+				<td>{$q.money}</td>
+				<td>{$q.todayservice}</td>
+				<td>{$q.todaymoney}</td>
+				<td>{$q.person}</td>
+				<td>{$q.todayperson}</td>
+				<td>{$q.RegisterTime}</td>
+				<td>{$q.LastActionTime}</td>
+			</tr>
+		</volist>
+		<tr>
+			<td colspan="12">{$page}</td>
+		</tr>
+	</table>
+ </body>
+</html>
+
+<script type="text/javascript">
+    function searchword(){
+        var startdate = $("#startdate").val();
+        var enddate = $("#enddate").val();
+        var hospitalname = $("#hospitalname").val();
+        window.location.href='index.php?m=Hospitaldata&a=index&startdate='+startdate+'&enddate='+enddate+'&hospitalname='+hospitalname;
+    }
+</script>

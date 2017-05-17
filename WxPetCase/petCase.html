@@ -1,0 +1,194 @@
+<layout name="layout/default" />
+
+<style type="text/css">
+#container{
+	background-color: #efeff3;
+}
+.petc_page{
+	top: 125px;
+	padding-top: 10px;
+	background-color: #efeff3;
+}
+.petc_selector{
+	margin: 0;
+	font-size: 13px;
+	line-height: 15px;
+	color: #212121;
+	line-height: 45px;
+	padding-left: 15px;
+}
+.petc_selector:before{
+	height: 0;
+	border: none;
+}
+.petc_date{
+	display: inline-block;
+	width: 100px;
+	height: 25px;
+	vertical-align: middle;
+	box-sizing: border-box;
+	margin: -3px 5px 0;
+	position: relative;
+	line-height: 27px;
+	text-align: center;
+	color: #9b9b9b;
+}
+.petc_date:before{
+	content: "";
+	position: absolute;
+	width: 200%;
+	height: 200%;
+	box-sizing: border-box;
+	border: 1px solid #c7c7c7;
+	border-radius: 4px;
+	left: -50%;
+	top: -50%;
+	transform-origin: center;
+	transform: scale(.5);
+}
+.petc_page .weui-cell__ft{
+	position: absolute;
+	right: 15px;
+	top: 0;
+	height: 100%;
+}
+.petc_page .weui-panel__bd{
+	padding-right: 40px;
+}
+</style>
+<div class="page_fixed">
+	<div class="page_header">
+		<a class="page_header_left" href="/WxPersonalCenter/personCenter">个人中心</a>
+		宠物病历
+	</div>
+	<div class="pc_hospital">
+		{$regname}
+		<a href="/WxPersonalCenter/chooseHospital" class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;margin-top: 7px;">更换</a>
+	</div>
+	<div class="weui-panel petc_selector">
+		<div class="weui-panel__bd" style="padding-right: 15px;">
+			<p>筛选：<span class="petc_date petc_date_start">{$starttime}</span>至<span class="petc_date petc_date_end">{$endtime}</span></p>
+		</div>
+	</div>
+</div>
+
+<div class="petc_page page">
+	<volist name="datas" id="vo">
+		<a href="/WxPetCase/petCaseDetail?mid={$vo['Mid']}&regcode={$regcode}&regname={$regname}">
+			<div class="weui-panel weui-cell_access">
+				<div class="weui-panel__bd">
+					<div class="weui-media-box weui-media-box_text">
+						<h4 class="weui-media-box__title">{$vo['Abstract']}({$vo['PetName']})</h4>
+						<p class="weui-media-box__desc">{$vo['EventTime']}（<?php $w=date('w',strtotime($vo['EventTime']));$weekArr=array("周日","周一","周二","周三","周四","周五","周六");echo $weekArr[$w]; ?>）&nbsp;&nbsp;&nbsp;&nbsp;主治医生：{$vo['Con_Employee_Name']}</p>
+					</div>
+				</div>
+				<span class="weui-cell__ft"></span>
+			</div>
+		</a>
+	</volist>
+
+	<if condition="$isleft eq 1">
+		<div class="weui-loadmore">
+		    <span class="weui-loadmore__tips click_to_load">加载更多</span>
+		</div>
+	<else />
+		<div class="weui-loadmore">
+		    <span class="weui-loadmore__tips">无更多数据</span>
+		</div>
+	</if>
+
+</div>
+
+<script type="text/javascript" src="/Public/javascripts/loading_zc.js?v=2"></script>
+<script type="text/javascript">
+$(function() {
+	//----------------------------select
+	$('.petc_date_start').click(function(event) {
+		var _this = this;
+		weui.datePicker({
+			start: 2000,
+			end: new Date(),
+			defaultValue: '{$starttime}'.split('-'),
+			onConfirm: function(result){
+				var start_time_choosed = result[0].value + '-' + ((('' + result[1].value).length === 2) ? result[1].value : '0' + result[1].value) + '-' + ((('' + result[2].value).length === 2) ? result[2].value : '0' + result[2].value);
+				var end_time = $(".petc_date_end").text();
+				if (new Date(start_time_choosed) > new Date(end_time)) {
+					start_time_choosed = end_time;
+				}
+				window.location = '/WxPetCase/petCase?starttime=' + start_time_choosed + "&endtime=" + end_time;
+			},
+			id: 'ph_date_start'
+		});
+	});
+	$('.petc_date_end').click(function(event) {
+		var _this = this;
+		weui.datePicker({
+			start: 2000,
+			end: new Date(),
+			defaultValue: '{$endtime}'.split('-'),
+			onConfirm: function(result){
+				var end_time_choosed = result[0].value + '-' + ((('' + result[1].value).length === 2) ? result[1].value : '0' + result[1].value) + '-' + ((('' + result[2].value).length === 2) ? result[2].value : '0' + result[2].value);
+				var start_time = $(".petc_date_start").text();
+				if (new Date(start_time) > new Date(end_time_choosed)) {
+					end_time_choosed = start_time;
+				}
+				window.location = '/WxPetCase/petCase?starttime=' + start_time + "&endtime=" + end_time_choosed;
+			},
+			id: 'ph_date_end'
+		});
+	});
+
+	// -----------------------------------
+	// ---------loading_zc.js-ajax加载数据
+	// 1-是否有剩余数据
+	var isleft = "{$isleft}";
+	// 2-拼装post数据
+	var regcode = "{$regcode}";
+	var consumermid = + "{$consumermid}";
+	var startTime = "{$starttime}";
+	var endTime = "{$endtime}";
+	var currentpage = + "{$currentpage}";
+	var info = {
+		"regcode": regcode,
+		"consumermid": consumermid,
+		"startTime": startTime,
+		"endTime": endTime,
+		"currentpage": currentpage
+	};
+	// 3-将ajax返回数据进行拼装
+	function create_html(datas) {
+		var len = datas.length;
+		var _html = '';
+
+		for (var i = 0; i < len; i++) {
+			var data = JSON.parse(datas[i]);
+			console.log(data);
+			var week_idx = new Date(data.EventTime).getDay();
+			var week_arr=["周日","周一","周二","周三","周四","周五","周六"];
+			var week = week_arr[week_idx];
+			var item = '<a href="/WxPetCase/petCaseDetail?mid=' + data.Mid + '&regcode={$regcode}&regname={$regname}">' + 
+					     '<div class="weui-panel weui-cell_access">' +
+					       '<div class="weui-panel__bd">' +
+						     '<div class="weui-media-box weui-media-box_text">' +
+							   '<h4 class="weui-media-box__title">' + data.Abstract + '(' + data.PetName + ')</h4>' +
+							   '<p class="weui-media-box__desc">' + data.EventTime + '（' + week + '）&nbsp;&nbsp;&nbsp;&nbsp;主治医生：' +
+							   data.Con_Employee_Name + '</p>' + 
+						     '</div>' +
+					       '</div>' +
+					       '<span class="weui-cell__ft"></span>' +
+				         '</div>' +
+			           '</a>';
+			_html += item;
+		}
+
+		return _html;
+	}
+	// 4-post目标url
+	var url = '/WxPetCase/ajaxPetCase';
+	// 5-创建实例并加载
+	var loading = new Loading_zc(isleft, info, create_html, url);
+	loading.init();
+	// -----------------------------------
+
+});
+</script>

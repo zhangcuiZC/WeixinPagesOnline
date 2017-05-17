@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+	<form method="post" action="index.php?m=Index&a=getimg"enctype="multipart/form-data">
+		<input type="text" name="userid" value="111111"><br>
+		<input type="text" name="HospitalID" value="222222"><br>
+		请选择上传文件：<input type="file" name="petimg">
+		请选择上传文件：<input type="file" name="petcheckimg">
+		<input type="submit" name="sb" value="上传">
+	</form>
+ </body>
+</html>

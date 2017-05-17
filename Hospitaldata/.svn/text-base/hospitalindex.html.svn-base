@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  	<meta charset="UTF-8">
+  	<title>后台医院统计</title>
+  	<script type="text/javascript" src="default/Tpl/public/js/jquery-1.8.3.min.js"></script>
+
+  	<style type="text/css">
+		td{text-align: center;}
+	</style>
+ </head>
+ <body>
+ 	<h3 align="center">{$hospitalname}----数据统计</h3>
+	<table border="1" cellpadding="5%" cellspacing="0" align="center" width="500">
+		<tr>
+			<td colspan="2">
+				<input type="text" id="startdate" value="{$startdate}" placeholder="起止时间" >
+ 				<input type="text" id="enddate" value="{$enddate}" placeholder="结束时间" >
+    			<input type="button" onclick="searchword()" value="搜索">
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size:18px;font-weight:bold;">服务项目</td>
+			<td style="font-size:18px;font-weight:bold;">项目数目</td>
+		</tr>
+		<volist name="list['data']" id="q">
+			<tr>
+				<td>{$q.Name}</td>
+				<td>{$q.count}</td>
+			</tr>
+		</volist>
+		<tr>
+			<td>总服务项目</td>
+			<if condition="$list.sumtype eq null">
+				<td> 0 个</td>
+			<else/>
+				<td>{$list.sumtype}个</td>
+			</if>
+		</tr>
+		<tr>
+			<td>总服务费用</td>
+			<if condition="$list.money eq null">
+				<td> 0 元</td>
+			<else/>
+				<td>{$list.money}元</td>
+			</if>
+		</tr>
+		<tr>
+			<td>总用户量</td>
+			<if condition="$list.person eq null">
+				<td> 0 人</td>
+			<else/>
+				<td>{$list.person}人</td>
+			</if>
+		</tr>
+		<tr>
+			<td>总宠物量</td>
+			<if condition="$list.petnum eq null">
+				<td> 0 只</td>
+			<else/>
+				<td>{$list.petnum}只</td>
+			</if>
+		</tr>
+		
+	</table>
+	<input type="hidden" value="{$Hospital_RegisterCode}" id="code">
+	<h3 align="center">商品数据统计</h3>
+	<table border="1" cellpadding="5%" cellspacing="0" align="center" width="700px">
+		<tr>
+			<td>商品id</td>
+			<td>商品名称</td>
+			<td>总价格</td>
+			<td>总数量</td>
+			<td>平均价</td>
+		</tr>
+		<volist name="goods" id="q">
+			<tr>
+				<td>{$q.CommodityMid}</td>
+				<td>{$q.Name}</td>
+				<td>{$q.paygoods}</td>
+				<td>{$q.sumgoods}</td>
+				<td>{$q.goodprice}</td>
+			</tr>
+		</volist>
+	<table>
+
+ </body>
+</html>
+
+<script type="text/javascript">
+
+    function searchword(){
+        var startdate = $("#startdate").val();
+    	var enddate = $("#enddate").val();
+    	var code = $("#code").val();
+        window.location.href='index.php?m=Hospitaldata&a=hospitalindex&startdate='+startdate+'&enddate='+enddate+'&Hospital_RegisterCode='+code;
+    }
+</script>
